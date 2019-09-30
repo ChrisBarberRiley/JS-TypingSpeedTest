@@ -17,6 +17,7 @@ const currentTime = document.getElementById("time");
 const message = document.getElementById("message");
 const difficultyInput = document.getElementById("difficulty");
 
+// TODO: make api call to return random list of words, better yet, build a quick API
 const words = ["chris", "archie", "sian", "winston", "hobnob", "sofa"];
 
 // Initialize game
