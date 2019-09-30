@@ -2,6 +2,7 @@ window.addEventListener("load", init);
 
 // Default vars
 let time = 5;
+let difficulty = 6;
 let score = 0;
 let gamesPlayed = 0;
 let highestScore = 0;
@@ -14,6 +15,7 @@ const currentScore = document.getElementById("score");
 const highScore = document.getElementById("highest-score");
 const currentTime = document.getElementById("time");
 const message = document.getElementById("message");
+const difficultyInput = document.getElementById("difficulty");
 
 const words = ["chris", "archie", "sian", "winston", "hobnob", "sofa"];
 
@@ -27,13 +29,19 @@ function init() {
     setInterval(countdown, 1000);
 }
 
+/**
+ *  Watch for a focus on the input and providing the game isn't
+ * currently being played, started a new game
+ */
 function startInitiated() {
-    console.log("initial");
     if (!gameStarted) {
         gameStart();
     }
 }
 
+/**
+ * Launch a new game
+ */
 function gameStart() {
     // check if the input has been focused on
     console.info("--Initiate game start--");
@@ -46,11 +54,18 @@ function gameStart() {
     }
 }
 
+/**
+ * Game default states
+ */
 function defaultState() {
     currentTime.innerHTML = "Starting...";
     currentScore.innerHTML = score;
+    setDifficulty();
 }
 
+/**
+ * Declare default end state (once a game has reached the time limit)
+ */
 function endState() {
     gameStarted = false;
     message.innerHTML = "Game over!";
@@ -62,6 +77,9 @@ function endState() {
     score = 0;
 }
 
+/**
+ * Gradually decrease the time after a successful input
+ */
 function countdown() {
     if (time > 0 && gameStarted) {
         time--;
@@ -82,6 +100,9 @@ function showWord() {
     currentWord.innerHTML = words[rand];
 }
 
+/**
+ * Check the input for a correct matches
+ */
 function checkInput() {
     if (gameEnd) {
         message.innerHTML = "";
@@ -89,18 +110,43 @@ function checkInput() {
     }
 
     if (matchWords()) {
-        time = 6;
         showWord();
         wordInput.value = "";
         incrementScore();
+        setDifficulty();
     }
 }
 
+/**
+ * If a user continues to beat the system, lower the time they have between
+ * matching each word
+ */
+function setDifficulty() {
+    if (score == 6) {
+        difficulty--;
+    } else if (score == 11) {
+        difficulty--;
+    } else if (score == 21) {
+        difficulty--;
+    } else if (score == 31) {
+        difficulty--;
+    }
+    time = difficulty;
+
+    difficultyInput.innerHTML = difficulty - 1;
+}
+
+/**
+ * Take the current score and increment by one
+ */
 function incrementScore() {
     score++;
     currentScore.innerHTML = score;
 }
 
+/**
+ * Check the input and the current word match
+ */
 function matchWords() {
     if (wordInput.value == currentWord.innerHTML) {
         message.innerHTML = "Correct";
